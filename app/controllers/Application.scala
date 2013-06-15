@@ -13,7 +13,16 @@ object Application extends Controller {
 
   def recipes = TODO
 
-  def newRecipe = TODO
+  def newRecipe = Action {
+    implicit request =>
+      recipeForm.bindFromRequest.fold(
+        errors => BadRequest(views.html.index(Recipe.all(), errors)),
+        label => {
+          Recipe.create(label)
+          Redirect(routes.Application.recipes)
+        }
+      )
+  }
 
   def deleteRecipe(recipeId: Long) = TODO
 
