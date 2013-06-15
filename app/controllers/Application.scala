@@ -6,7 +6,14 @@ import play.api.mvc._
 object Application extends Controller {
   
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    Redirect(routes.Application.recipes)
   }
+
+  def recipes = TODO
+
+  def newRecipe = TODO
+
+  def deleteRecipe(recipeId: Long) = TODO
+
   
 }
