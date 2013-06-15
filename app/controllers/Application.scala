@@ -1,12 +1,14 @@
 package controllers
 
-import play.api._
+import play.api.data._
+import play.api.data.Forms._
 import play.api.mvc._
+import models.Recipe
 
 object Application extends Controller {
   
   def index = Action {
-    Redirect(routes.Application.recipes)
+    Ok(views.html.index(Recipe.all(), recipeForm))
   }
 
   def recipes = TODO
@@ -14,6 +16,10 @@ object Application extends Controller {
   def newRecipe = TODO
 
   def deleteRecipe(recipeId: Long) = TODO
+
+  val recipeForm = Form(
+    "label" -> nonEmptyText
+  )
 
   
 }

@@ -1,7 +1,31 @@
-@(message: String)
+@(recipes: List[Recipe], recipeForm: Form[String])
 
-@main("Welcome to Play 2.1") {
-    
-    @play20.welcome(message)
-    
+@import helper._
+
+@main("Recipes list") {
+
+<h1>@recipes.size recipes(s)</h1>
+
+<ul>
+    @recipes.map { recipe =>
+    <li>
+        @recipe.title
+
+        @form(routes.Application.deleteRecipe(recipe.id)) {
+        <input type="submit" value="Delete">
+        }
+    </li>
+    }
+</ul>
+
+<h2>Add a new recipe</h2>
+
+@form(routes.Application.newRecipe) {
+
+@inputText(recipeForm("label"))
+
+<input type="submit" value="Create">
+
+}
+
 }
