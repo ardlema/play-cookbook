@@ -11,7 +11,9 @@ object Application extends Controller {
     Ok(views.html.index(Recipe.all(), recipeForm))
   }
 
-  def recipes = TODO
+  def recipes = Action {
+    Ok(views.html.index(Recipe.all(), recipeForm))
+  }
 
   def newRecipe = Action {
     implicit request =>
@@ -24,11 +26,12 @@ object Application extends Controller {
       )
   }
 
-  def deleteRecipe(recipeId: Long) = TODO
+  def deleteRecipe(id: Long) = Action {
+    Recipe.delete(id)
+    Redirect(routes.Application.recipes)
+  }
 
   val recipeForm = Form(
-    "label" -> nonEmptyText
+    "title" -> nonEmptyText
   )
-
-  
 }
