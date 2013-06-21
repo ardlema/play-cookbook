@@ -26,7 +26,7 @@ object Application extends Controller {
       )
   }
 
-  def deleteRecipe(id: Long) = Action {
+  def deleteRecipe(id: String) = Action {
     Recipe.delete(id)
     Redirect(routes.Application.recipes)
   }

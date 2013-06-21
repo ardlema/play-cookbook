@@ -1,41 +1,48 @@
 package models
 
-import anorm.SqlParser._
-import anorm._
-import play.api.db._
+import net.vz.mongodb.jackson.{Id, ObjectId, JacksonDBCollection}
+import play.modules.mongodb.jackson.MongoDB
 import play.api.Play.current
+import org.codehaus.jackson.annotate.{JsonCreator, JsonProperty}
+import scala.collection.JavaConverters._
+import reflect.BeanProperty
 
-case class Recipe(id: Long, title: String)
+
+/*class Recipe(@ObjectId @Id val id: Long,
+               @BeanProperty @JsonProperty("title") val title: String) {
+  @ObjectId @Id def getId = id;
+}*/
+
+
+
+case class Recipe(@ObjectId @Id val id: String,
+               @BeanProperty @JsonProperty("title") val title: String) {
+
+  @ObjectId @Id def getId = id;
+}
+
+//case class Recipe(id: Long, title: String)
+
 
 object Recipe {
 
+  private lazy val db = MongoDB.collection("recipes", classOf[Recipe], classOf[String])
+
   val recipes: List[Recipe]  = Nil
 
-  def all() : List[Recipe] = DB.withConnection { implicit c =>
-    SQL("select * from recipe").as(recipe *)
+  def all(): List[Recipe] = {
+    val listOfRecipes = db.find().toArray
+    listOfRecipes.asScala.toList
   }
 
   def create(title: String) {
-    DB.withConnection { implicit c =>
-      SQL("insert into recipe (title) values ({title})").on(
-      'title -> title
-    ).executeUpdate()
-    }
+    val recipe = Recipe("507f1f77bcf86cd799439011",title)
+    db.save(recipe)
   }
 
-  def delete(id: Long) {
-    DB.withConnection { implicit c =>
-      SQL("delete from recipe where id = {id}").on(
-        'id -> id
-      ).executeUpdate()
-    }
+  def delete(id: String) {
+
   }
 
-  val recipe = {
-    get[Long]("id") ~
-      get[String]("title") map {
-      case id~title => Recipe(id, title)
-    }
-  }
 
 }
